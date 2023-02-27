@@ -1,5 +1,5 @@
-import tkinter as tk
-import sqlite3
+import customtkinter as tk
 
-window = tk.Tk()
-window.mainloop()
+app = tk.CTk()
+app.geometry("400x240")
+app.mainloop()
