@@ -20,6 +20,8 @@ def login():
     main_window = tk.CTk()
     main_window.geometry("1920x1080")
     main_window.title("Password Manager")
+    main_window_frame = tk.CTkFrame(master= main_window, width=1920,height=1080,corner_radius=15)
+    main_window_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
     main_window.mainloop()
 
 def open_new_window():
@@ -50,8 +52,8 @@ login_label.place(x=50, y=45)
 password_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Password', show="*")
 password_entry.place(x=50, y=165)
 
-button1 = tk.CTkButton(master=frame, width=220, text="Login", command=login, corner_radius=6)
-button1.place(x=50, y=240)
+login_button = tk.CTkButton(master=frame, width=220, text="Login", command=login, corner_radius=6)
+login_button.place(x=50, y=240)
 
 
 password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
