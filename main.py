@@ -15,6 +15,7 @@ app.title("Login")
 
 
 # navigation to the main window
+
 def login():
 
     app.destroy()
@@ -30,7 +31,15 @@ def login():
     table = ttk.Treeview(main_window)
     table.place(relx=0.5, rely=0.5, width=646, height=410, anchor=tkinter.CENTER)
 
+    table.configure(
+        columns=(
+            "Username"
+            "Password"
+        )
+    )
+
     main_window.mainloop()
+
 
 def open_new_window():
     app.destroy()
@@ -64,6 +73,14 @@ password_entry.place(x=50, y=165)
 login_button = tk.CTkButton(master=frame, width=220, text="Login", command=login, corner_radius=6)
 login_button.place(x=50, y=240)
 
+# temporary for proof of concept
+def generate_password():
+    pass
+
+
+password_generation = tk.CTkButton(master=frame, width=220, text="Generate a Password",
+                                   command=generate_password(), corner_radius=6)
+password_generation.place(x=50, y=290)
 
 password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
 password_recover.place(x=155, y=195)
