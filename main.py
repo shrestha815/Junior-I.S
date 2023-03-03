@@ -1,4 +1,5 @@
 import tkinter
+from tkinter import ttk
 import customtkinter as tk
 import random
 import string
@@ -18,17 +19,26 @@ def login():
 
     app.destroy()
     main_window = tk.CTk()
-    main_window.geometry("1920x1080")
+    main_window.geometry('700x520')
     main_window.title("Password Manager")
-    main_window_frame = tk.CTkFrame(master= main_window, width=1920,height=1080,corner_radius=15)
-    main_window_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+
+    # widgets
+
+    label_main_window = tk.CTkLabel(main_window, text="Stored Passwords", anchor='n', font=('Open Sans', 20))
+    label_main_window.pack(padx=10, pady=(40, 20), fill='both')
+
+    table = ttk.Treeview(main_window)
+    table.place(relx=0.5, rely=0.5, width=646, height=410, anchor=tkinter.CENTER)
+
     main_window.mainloop()
 
 def open_new_window():
     app.destroy()
     new_window = tk.CTk()
-    new_window.geometry("600x440")
+    new_window.geometry("750x450")
     new_window.title("Password Recovery")
+    label_new_window = tk.CTkLabel(new_window, text="Recover Password", anchor='n', font=('Open Sans', 25))
+    label_new_window.pack(padx=10, pady=5, fill='both')
 
     new_frame = tk.CTkFrame(master=new_window, width=320, height=360, corner_radius=15)
     new_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
@@ -40,7 +50,6 @@ def open_new_window():
     validation_entry.place(x=50, y=200)
 
     new_window.mainloop()
-
 
 
 frame = tk.CTkFrame(master=app, width=320, height=360, corner_radius=15)
