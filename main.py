@@ -5,6 +5,47 @@ import random
 import string
 import sqlite3 as sq
 
+class App(tk.CTk):
+    def __init__(self):
+        super().__init__()
+
+        # main_window
+        self.title("Password Manager")
+        self.geometry("600x440")
+        self.main_window()
+        self._set_appearance_mode("System")
+
+    def login(self):
+        self.main_window()
+        main_window = tk.CTk()
+        main_window.geometry('700x520')
+        main_window.title("Password Manager")
+
+    def main_window(self):
+
+        frame = tk.CTkFrame(master=self, width=320, height=360, corner_radius=15)
+        frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+
+        login_label = tk.CTkLabel(master=frame, text="Enter master password", font=('Open Sans', 19), anchor="e")
+        login_label.place(x=50, y=45)
+
+        password_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Password', show="*")
+        password_entry.place(x=50, y=165)
+
+        login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login, corner_radius=6)
+        login_button.place(x=50, y=240)
+
+        password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
+        password_recover.place(x=155, y=195)
+        password_recover.bind("<Button-1>", lambda e: self.password_recovery_window)
+
+
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
+
+
 tk.set_appearance_mode("System")
 tk.set_default_color_theme("blue")
 
@@ -73,8 +114,6 @@ password_entry.place(x=50, y=165)
 login_button = tk.CTkButton(master=frame, width=220, text="Login", command=login, corner_radius=6)
 login_button.place(x=50, y=240)
 
-# temporary for proof of concept
-
 
 def generate_password_window():
     print("Generated Password: ", password_generator(16))
@@ -86,7 +125,6 @@ def password_generator(length):
     return generated_password
 
 
-
 password_generation = tk.CTkButton(master=frame, width=220, text="Generate a Password",
                                    command=generate_password_window, corner_radius=6)
 password_generation.place(x=50, y=290)
@@ -96,7 +134,6 @@ password_recover.place(x=155, y=195)
 password_recover.bind("<Button-1>", lambda e: open_new_window())
 
 print("")
-# password generation proof of concept
-#print("Generated Password: ", password_generator(16))
+
 app.mainloop()
 
