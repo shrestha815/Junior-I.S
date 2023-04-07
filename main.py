@@ -5,6 +5,8 @@ import random
 import string
 import sqlite3 as sq
 
+
+
 class App(tk.CTk):
     def __init__(self):
         super().__init__()
@@ -16,10 +18,17 @@ class App(tk.CTk):
         self._set_appearance_mode("System")
 
     def login(self):
-        self.main_window()
-        main_window = tk.CTk()
+        self.withdraw()
+        main_window = tk.CTkToplevel(self)
         main_window.geometry('700x520')
         main_window.title("Password Manager")
+
+    def password_recovery_window(self):
+        self.withdraw()
+        window = tk.CTkToplevel(self)
+        window.geometry('700x520')
+        window.title("Recover Password")
+
 
     def main_window(self):
 
