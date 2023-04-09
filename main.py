@@ -23,11 +23,19 @@ class App(tk.CTk):
         main_window.geometry('700x520')
         main_window.title("Password Manager")
 
+
+
     def password_recovery_window(self):
         self.withdraw()
         window = tk.CTkToplevel(self)
         window.geometry('700x520')
         window.title("Recover Password")
+
+        recovery_frame = tk.CTkFrame(master=window, width=320, height=360, corner_radius=15)
+        recovery_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+
+        label_recovery_window = tk.CTkLabel(master=window, text="Recover Password", anchor='n', font=('Open Sans', 25))
+        label_recovery_window.pack(padx=10, pady=5, fill='both')
 
 
     def main_window(self):
@@ -46,7 +54,7 @@ class App(tk.CTk):
 
         password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
         password_recover.place(x=155, y=195)
-        password_recover.bind("<Button-1>", lambda e: self.password_recovery_window)
+        password_recover.bind("<Button-1>", lambda e: self.password_recovery_window())
 
 
 
