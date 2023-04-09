@@ -4,7 +4,8 @@ import customtkinter as tk
 import random
 import string
 import sqlite3 as sq
-
+import traceback
+import sys
 
 
 class App(tk.CTk):
@@ -16,6 +17,21 @@ class App(tk.CTk):
         self.geometry("600x440")
         self.main_window()
         self._set_appearance_mode("System")
+
+    def connect_db(self):
+        try:
+            database_connection = sq.connect('password_database.db')
+            cursor = database_connection.cursor()
+            print("Connection Successful")
+
+            sqlite_select_Query = "select sqlite_version();"
+            cursor.execute(sqlite_select_Query)
+            record = cursor.fetchall()
+            print("SQLite Database Version is: ", record)
+            cursor.close()
+
+        except sq.Error as error:
+            print("Failure to connect")
 
     def login(self):
         self.withdraw()
