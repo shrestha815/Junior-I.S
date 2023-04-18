@@ -8,6 +8,29 @@ import traceback
 import sys
 
 
+#tasks create a table for passwords, display table in stored passwords window, login validation
+
+def init_db():
+    try:
+        database_connection = sq.connect('password_database.db')
+        cursor = database_connection.cursor()
+        print("Connection Successful")
+
+        table_creation_query = """CREATE TABLE user_passwords (
+                                username text,
+                                password text,
+                                email text 
+            );"""
+
+        #table_insertion_query = "INSERT INTO user_passwords VALUES('shrestha815','password','sshrestha24@wooster.edu')"
+        cursor.execute(table_creation_query)
+        database_connection.commit()
+        database_connection.close()
+
+    except sq.Error as error:
+        print("Failure to connect")
+
+
 class App(tk.CTk):
     def __init__(self):
         super().__init__()
@@ -18,26 +41,12 @@ class App(tk.CTk):
         self.main_window()
         self._set_appearance_mode("System")
 
-    def connect_db(self):
-        try:
-            database_connection = sq.connect('password_database.db')
-            cursor = database_connection.cursor()
-            print("Connection Successful")
-
-            sqlite_select_Query = "select sqlite_version();"
-            cursor.execute(sqlite_select_Query)
-            record = cursor.fetchall()
-            print("SQLite Database Version is: ", record)
-            cursor.close()
-
-        except sq.Error as error:
-            print("Failure to connect")
-
     def login(self):
         self.withdraw()
         main_window = tk.CTkToplevel(self)
         main_window.geometry('700x520')
         main_window.title("Password Manager")
+        init_db()
 
 
 
@@ -53,14 +62,15 @@ class App(tk.CTk):
         label_recovery_window = tk.CTkLabel(master=window, text="Recover Password", anchor='n', font=('Open Sans', 25))
         label_recovery_window.pack(padx=10, pady=5, fill='both')
 
+        password_recovery = tk.CTkEntry(master=recovery_frame, width=220, placeholder_text= "Enter New Password")
 
     def main_window(self):
 
         frame = tk.CTkFrame(master=self, width=320, height=360, corner_radius=15)
         frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-        login_label = tk.CTkLabel(master=frame, text="Enter master password", font=('Open Sans', 19), anchor="e")
-        login_label.place(x=50, y=45)
+        login_label = tk.CTkLabel(master=frame, text="Enter Master Password", font=('Open Sans', 19), anchor="center")
+        login_label.place(x=55, y=45)
 
         password_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Password', show="*")
         password_entry.place(x=50, y=165)
@@ -71,6 +81,7 @@ class App(tk.CTk):
         password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
         password_recover.place(x=155, y=195)
         password_recover.bind("<Button-1>", lambda e: self.password_recovery_window())
+
 
 
 
