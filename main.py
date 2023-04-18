@@ -16,12 +16,17 @@ def init_db():
         cursor = database_connection.cursor()
         print("Connection Successful")
 
-        table_creation_query = """CREATE TABLE user_passwords (
+        table_creation_query = """CREATE TABLE IF NOT EXISTS user_passwords (
                                 username text,
                                 password text,
                                 email text 
             );"""
 
+        master_password_table = """CREATE TABLE IF NOT EXISTS master_password (
+                                username text PRIMARY KEY,
+                                master_password text
+            );"""
+        cursor.execute(master_password_table)
         #table_insertion_query = "INSERT INTO user_passwords VALUES('shrestha815','password','sshrestha24@wooster.edu')"
         cursor.execute(table_creation_query)
         database_connection.commit()
@@ -42,6 +47,8 @@ class App(tk.CTk):
         self._set_appearance_mode("System")
 
     def login(self):
+        database_connection = sq.connect('password_database.db')
+
         self.withdraw()
         main_window = tk.CTkToplevel(self)
         main_window.geometry('700x520')
@@ -71,6 +78,9 @@ class App(tk.CTk):
 
         login_label = tk.CTkLabel(master=frame, text="Enter Master Password", font=('Open Sans', 19), anchor="center")
         login_label.place(x=55, y=45)
+
+        username_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Username')
+        username_entry.place(x=50, y=130)
 
         password_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Password', show="*")
         password_entry.place(x=50, y=165)
