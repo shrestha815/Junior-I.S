@@ -73,16 +73,17 @@ class App(tk.CTk):
             storage = cursor.fetchall()
             columns = ('account', 'username', 'password', 'email')
 
-            table = ttk.Treeview(main_window,columns=columns, selectmode='browse')
-
+            table = ttk.Treeview(main_window,columns=columns, selectmode='browse', show= "headings")
+            table.heading('account', text='Account')
+            table.heading('username', text='Username')
+            table.heading('password', text='Password')
+            table.heading('email', text='Email')
 
             for records in storage:
                 table.insert("", tk.END, values=(records[0], records[1], records[2], records[3]))
-            table.place(relx=0.5, rely=0.5, width=646, height=410, anchor=tkinter.CENTER)
-
+            table.place(relx=0.5, rely=0.5, width=1000, height=410, anchor=tkinter.CENTER)
 
         elif password != password_actual:
-            #print("Failure :(")
 
             error_message_label = tk.CTkLabel(master=self,
                                                 text="The password you have entered is incorrect. Please try again.",
@@ -103,7 +104,7 @@ class App(tk.CTk):
 
         email_entry = tk.CTkEntry(master=recovery_frame, textvariable=self.email_holder,
                                   width=220,placeholder_text='Email')
-        email_entry.place(x=50, y= 165)
+        email_entry.place(x=50, y=165)
 
     def main_window(self):
 
