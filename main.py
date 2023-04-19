@@ -58,6 +58,7 @@ class App(tk.CTk):
         password_actual = fetched_record[0]
 
         if password == password_actual:
+            password = ""
             print("Success!")
             self.withdraw()
             main_window = tk.CTkToplevel(self)
@@ -82,7 +83,7 @@ class App(tk.CTk):
 
         email_entry = tk.CTkEntry(master=recovery_frame, textvariable=self.email_holder,
                                   width=220,placeholder_text='Email')
-        email_entry.place()
+        email_entry.place(x=50, y= 165)
 
     def main_window(self):
 
@@ -95,7 +96,10 @@ class App(tk.CTk):
         # username_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Username')
         # username_entry.place(x=50, y=130)
 
-        password_entry = tk.CTkEntry(master=frame, textvariable=self.password_holder, width=220, placeholder_text='Password', show="*")
+        password_entry_label = tk.CTkLabel(master=frame, text="Password", font=('Open Sans', 14), anchor="center")
+        password_entry_label.place(x=50,y=130)
+        password_entry = tk.CTkEntry(master=frame, placeholder_text='Password', textvariable=self.password_holder,
+                                     width=220, show="*")
         password_entry.place(x=50, y=165)
 
         login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login, corner_radius=6)
