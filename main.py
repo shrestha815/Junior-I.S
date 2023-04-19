@@ -66,7 +66,20 @@ class App(tk.CTk):
             main_window.geometry('700x520')
             main_window.title("Password Manager")
 
-            self.password_storage()
+            label_main_window = tk.CTkLabel(main_window, text="Stored Passwords", anchor='n', font=('Open Sans', 20))
+            label_main_window.pack(padx=10, pady=(40, 20), fill='both')
+
+            cursor.execute("""SELECT * from user_passwords;""")
+            storage = cursor.fetchall()
+            columns = ('account', 'username', 'password', 'email')
+
+            table = ttk.Treeview(main_window,columns=columns, selectmode='browse')
+
+
+            for records in storage:
+                table.insert("", tk.END, values=(records[0], records[1], records[2], records[3]))
+            table.place(relx=0.5, rely=0.5, width=646, height=410, anchor=tkinter.CENTER)
+
 
         elif password != password_actual:
             #print("Failure :(")
@@ -115,23 +128,6 @@ class App(tk.CTk):
         password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
         password_recover.place(x=155, y=195)
         password_recover.bind("<Button-1>", lambda e: self.password_recovery_window())
-
-    def password_storage(self):
-
-        label_main_window = tk.CTkLabel(self, text="Stored Passwords", anchor='n', font=('Open Sans', 20))
-        label_main_window.pack(padx=10, pady=(40, 20), fill='both')
-
-        table = ttk.Treeview(self)
-        table.place(relx=0.5, rely=0.5, width=646, height=410, anchor=tkinter.CENTER)
-
-        table.configure(
-            columns=(
-                "Username"
-                "Password"
-            )
-        )
-
-
 
 
 if __name__ == "__main__":
