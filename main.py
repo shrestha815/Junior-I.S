@@ -44,6 +44,7 @@ class App(tk.CTk):
         self.title("Password Manager")
         self.geometry("600x440")
         self.password_holder = tk.StringVar()
+        self.email_holder = tk.StringVar()
         self.main_window()
         self._set_appearance_mode("System")
 
@@ -79,7 +80,9 @@ class App(tk.CTk):
         label_recovery_window = tk.CTkLabel(master=window, text="Recover Password", anchor='n', font=('Open Sans', 25))
         label_recovery_window.pack(padx=10, pady=5, fill='both')
 
-        password_recovery = tk.CTkEntry(master=recovery_frame, width=220, placeholder_text= "Enter New Password")
+        email_entry = tk.CTkEntry(master=recovery_frame, textvariable=self.email_holder,
+                                  width=220,placeholder_text='Email')
+        email_entry.place()
 
     def main_window(self):
 
