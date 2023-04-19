@@ -17,13 +17,13 @@ def init_db():
         print("Connection Successful")
 
         table_creation_query = """CREATE TABLE IF NOT EXISTS user_passwords (
+                                account text,
                                 username text,
                                 password text,
                                 email text 
             );"""
 
         master_password_table = """CREATE TABLE IF NOT EXISTS master_password (
-                                username text PRIMARY KEY,
                                 master_password text
             );"""
         cursor.execute(master_password_table)
@@ -43,19 +43,29 @@ class App(tk.CTk):
         # main_window
         self.title("Password Manager")
         self.geometry("600x440")
+        self.password_holder = tk.StringVar()
         self.main_window()
         self._set_appearance_mode("System")
 
     def login(self):
         database_connection = sq.connect('password_database.db')
+        cursor = database_connection.cursor()
+        password = self.password_holder.get()
+        master_password_query = """SELECT master_password FROM master_password;"""
+        cursor.execute(master_password_query)
+        fetched_record = cursor.fetchone()
+        password_actual = fetched_record[0]
 
-        self.withdraw()
-        main_window = tk.CTkToplevel(self)
-        main_window.geometry('700x520')
-        main_window.title("Password Manager")
+        if password == password_actual:
+            print("Success!")
+            self.withdraw()
+            main_window = tk.CTkToplevel(self)
+            main_window.geometry('700x520')
+            main_window.title("Password Manager")
+        else:
+            print("Failure :(")
+
         init_db()
-
-
 
     def password_recovery_window(self):
         self.withdraw()
@@ -79,10 +89,10 @@ class App(tk.CTk):
         login_label = tk.CTkLabel(master=frame, text="Enter Master Password", font=('Open Sans', 19), anchor="center")
         login_label.place(x=55, y=45)
 
-        username_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Username')
-        username_entry.place(x=50, y=130)
+        # username_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Username')
+        # username_entry.place(x=50, y=130)
 
-        password_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Password', show="*")
+        password_entry = tk.CTkEntry(master=frame, textvariable=self.password_holder, width=220, placeholder_text='Password', show="*")
         password_entry.place(x=50, y=165)
 
         login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login, corner_radius=6)
