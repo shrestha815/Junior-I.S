@@ -83,6 +83,8 @@ class App(tk.CTk):
                 table.insert("", tk.END, values=(records[0], records[1], records[2], records[3]))
             table.place(relx=0.5, rely=0.5, width=1000, height=410, anchor=tkinter.CENTER)
 
+
+
         elif password != password_actual:
 
             error_message_label = tk.CTkLabel(master=self,
@@ -99,12 +101,23 @@ class App(tk.CTk):
         recovery_frame = tk.CTkFrame(master=window, width=320, height=360, corner_radius=15)
         recovery_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-        label_recovery_window = tk.CTkLabel(master=window, text="Recover Password", anchor='n', font=('Open Sans', 25))
-        label_recovery_window.pack(padx=10, pady=5, fill='both')
+        label_recovery_window = tk.CTkLabel(master=recovery_frame,
+                                            text="Enter the email associated with your master password", anchor='w',
+                                            font=('Open Sans', 11))
+        label_recovery_window.place(x=50, y=120)
 
         email_entry = tk.CTkEntry(master=recovery_frame, textvariable=self.email_holder,
                                   width=220,placeholder_text='Email')
         email_entry.place(x=50, y=165)
+
+        submit_button = tk.CTkButton(master=recovery_frame, width=220, text="Submit", command=self.recover_query, corner_radius=6)
+
+    def recover_query(self):
+        database_connection = sq.connect('password_database.db')
+        cursor = database_connection.cursor()
+        recovery_email = self.email_holder.get()
+
+
 
     def main_window(self):
 
