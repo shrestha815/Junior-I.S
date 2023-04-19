@@ -48,7 +48,7 @@ class App(tk.CTk):
         self.main_window()
         self._set_appearance_mode("System")
 
-    def login(self):
+    def login(self,frame):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
         password = self.password_holder.get()
@@ -66,6 +66,10 @@ class App(tk.CTk):
             main_window.title("Password Manager")
         else:
             print("Failure :(")
+            error_message_label = tk.CTkLabel(master=frame,
+                                              text="The password you have entered is incorrect. Please try again.",
+                                              text_color="red", font=('Open Sans', 10), anchor="center")
+            error_message_label.place(x=50, y=275)
 
         init_db()
 
@@ -102,7 +106,7 @@ class App(tk.CTk):
                                      width=220, show="*")
         password_entry.place(x=50, y=165)
 
-        login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login, corner_radius=6)
+        login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login(frame), corner_radius=6)
         login_button.place(x=50, y=240)
 
         password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
