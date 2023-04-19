@@ -39,6 +39,7 @@ def init_db():
 class App(tk.CTk):
     def __init__(self):
         super().__init__()
+        init_db()
 
         # main_window
         self.title("Password Manager")
@@ -48,7 +49,7 @@ class App(tk.CTk):
         self.main_window()
         self._set_appearance_mode("System")
 
-    def login(self,frame):
+    def login(self):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
         password = self.password_holder.get()
@@ -64,14 +65,14 @@ class App(tk.CTk):
             main_window = tk.CTkToplevel(self)
             main_window.geometry('700x520')
             main_window.title("Password Manager")
-        else:
-            print("Failure :(")
-            error_message_label = tk.CTkLabel(master=frame,
-                                              text="The password you have entered is incorrect. Please try again.",
-                                              text_color="red", font=('Open Sans', 10), anchor="center")
-            error_message_label.place(x=50, y=275)
 
-        init_db()
+        elif password != password_actual:
+            #print("Failure :(")
+
+            error_message_label = tk.CTkLabel(master=self,
+                                                text="The password you have entered is incorrect. Please try again.",
+                                                text_color="red", font=('Open Sans', 10), anchor="center")
+            error_message_label.place(x=150, y=330)
 
     def password_recovery_window(self):
         self.withdraw()
@@ -102,11 +103,11 @@ class App(tk.CTk):
 
         password_entry_label = tk.CTkLabel(master=frame, text="Password", font=('Open Sans', 14), anchor="center")
         password_entry_label.place(x=50,y=130)
-        password_entry = tk.CTkEntry(master=frame, placeholder_text='Password', textvariable=self.password_holder,
+        password_entry = tk.CTkEntry(master=frame, textvariable=self.password_holder,
                                      width=220, show="*")
         password_entry.place(x=50, y=165)
 
-        login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login(frame), corner_radius=6)
+        login_button = tk.CTkButton(master=frame, width=220, text="Login", command=self.login, corner_radius=6)
         login_button.place(x=50, y=240)
 
         password_recover = tk.CTkLabel(master=frame, text="Forgot password?", font=('Open Sans', 12))
