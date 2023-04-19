@@ -83,8 +83,6 @@ class App(tk.CTk):
                 table.insert("", tk.END, values=(records[0], records[1], records[2], records[3]))
             table.place(relx=0.5, rely=0.5, width=1000, height=410, anchor=tkinter.CENTER)
 
-
-
         elif password != password_actual:
 
             error_message_label = tk.CTkLabel(master=self,
@@ -110,12 +108,25 @@ class App(tk.CTk):
                                   width=220,placeholder_text='Email')
         email_entry.place(x=50, y=165)
 
-        submit_button = tk.CTkButton(master=recovery_frame, width=220, text="Submit", command=self.recover_query, corner_radius=6)
+        submit_button = tk.CTkButton(master=recovery_frame, width=220, text="Submit",
+                                     command=self.recover_query, corner_radius=6)
+
+        submit_button.place(x=50, y=240)
 
     def recover_query(self):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
         recovery_email = self.email_holder.get()
+
+        cursor.execute("""SELECT email FROM master_password;""")
+        fetched_email = cursor.fetchone()
+        email_actual = fetched_email[0]
+
+        if recovery_email == email_actual:
+            print("Success")
+        else:
+            print("You failed")
+
 
 
 
