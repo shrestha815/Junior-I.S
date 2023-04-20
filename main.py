@@ -44,8 +44,13 @@ class App(tk.CTk):
         # main_window
         self.title("Password Manager")
         self.geometry("600x440")
+
+        # Variables
         self.password_holder = tk.StringVar()
         self.email_holder = tk.StringVar()
+        self.password_reset = tk.StringVar()
+        self.password_reset_verification = tk.StringVar()
+
         self.main_window()
         self._set_appearance_mode("System")
 
@@ -102,16 +107,22 @@ class App(tk.CTk):
         label_recovery_window = tk.CTkLabel(master=recovery_frame,
                                             text="Enter the email associated with your master password", anchor='w',
                                             font=('Open Sans', 11))
-        label_recovery_window.place(x=50, y=120)
+        label_recovery_window.place(x=50, y=35)
 
         email_entry = tk.CTkEntry(master=recovery_frame, textvariable=self.email_holder,
                                   width=220,placeholder_text='Email')
-        email_entry.place(x=50, y=165)
+        email_entry.place(x=50, y=70)
+
+        new_password_label = tk.CTkLabel(master=recovery_frame, text="Enter your new master password",
+                                         anchor="center", font=('Open Sans', 11))
+        new_password_label.place(x=50, y=100)
+
+        master_password_entry = tk.CTkEntry(master=recovery_frame, textvariable=self.password_reset, width=220)
+        master_password_entry.place(x=50, y=130)
 
         submit_button = tk.CTkButton(master=recovery_frame, width=220, text="Submit",
                                      command=self.recover_query, corner_radius=6)
-
-        submit_button.place(x=50, y=240)
+        submit_button.place(x=50, y=270)
 
     def recover_query(self):
         database_connection = sq.connect('password_database.db')
@@ -121,14 +132,23 @@ class App(tk.CTk):
         cursor.execute("""SELECT email FROM master_password;""")
         fetched_email = cursor.fetchone()
         email_actual = fetched_email[0]
+        cursor.close()
 
         if recovery_email == email_actual:
             print("Success")
+            database_connection = sq.connect('password_database.db')
+            cursor = database_connection.cursor()
+            new_password = self.password_reset.get()
+
+            update_query = """UPDATE master_password 
+                            SET master_password = ?
+                            WHERE email = ?;"""
+
+            cursor.execute(update_query, (new_password, recovery_email))
+            cursor.close()
         else:
             print("You failed")
-
-
-
+            cursor.close()
 
     def main_window(self):
 
