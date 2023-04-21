@@ -55,6 +55,23 @@ class App(tk.CTk):
         self.main_window()
         self._set_appearance_mode("System")
 
+    def generate_password(self):
+        self.withdraw()
+        active_window = tk.CTkToplevel(self)
+        active_window.geometry('700x520')
+        active_window.title("Password Generator")
+
+
+        pass
+
+    def insert_password(self):
+        self.withdraw()
+        active_window = tk.CTkToplevel(self)
+        active_window = tk.CTkToplevel(self)
+        active_window.geometry('700x520')
+        active_window.title("Insert Password")
+        pass
+
     def login(self):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
@@ -87,7 +104,16 @@ class App(tk.CTk):
 
             for records in storage:
                 table.insert("", tk.END, values=(records[0], records[1], records[2], records[3]))
+
             table.place(relx=0.5, rely=0.5, width=1000, height=410, anchor=tkinter.CENTER)
+
+            generate_password_button = tk.CTkButton(master=main_window, width=220, text="Generate a password",
+                                                    command=self.generate_password, corner_radius=6)
+            generate_password_button.place(x=250, y=440)
+
+            insert_password_button = tk.CTkButton(master=main_window, width=150,text="Insert a new password",
+                                                  command=self.insert_password, corner_radius=6)
+            insert_password_button.place(x=250, y=470)
 
         elif password != password_actual:
 
@@ -148,6 +174,8 @@ class App(tk.CTk):
             cursor.execute(update_query, (new_password, recovery_email))
             database_connection.commit()
             cursor.close()
+            self.withdraw()
+
         else:
             print("You failed")
             cursor.close()
