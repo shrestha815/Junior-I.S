@@ -8,7 +8,8 @@ import traceback
 import sys
 
 
-#tasks create a table for passwords, display table in stored passwords window, login validation
+#tasks input passwords, update and delete, #comments for explanations and navigation from one window to the next via a log out function
+# after reset of a password user should be brought back to the main window 
 
 def init_db():
     try:
@@ -139,12 +140,13 @@ class App(tk.CTk):
             database_connection = sq.connect('password_database.db')
             cursor = database_connection.cursor()
             new_password = self.password_reset.get()
-
+            # need to fix this
             update_query = """UPDATE master_password 
                             SET master_password = ?
                             WHERE email = ?;"""
 
             cursor.execute(update_query, (new_password, recovery_email))
+            database_connection.commit()
             cursor.close()
         else:
             print("You failed")
