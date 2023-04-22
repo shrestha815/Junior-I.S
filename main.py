@@ -51,25 +51,52 @@ class App(tk.CTk):
         self.email_holder = tk.StringVar()
         self.password_reset = tk.StringVar()
         self.password_reset_verification = tk.StringVar()
+        self.generated_password = tk.StringVar()
 
         self.main_window()
         self._set_appearance_mode("System")
 
     def generate_password(self):
-        self.withdraw()
         active_window = tk.CTkToplevel(self)
         active_window.geometry('700x520')
         active_window.title("Password Generator")
 
+        generation_frame = tk.CTkFrame(master=active_window, width=320, height=360, corner_radius=15)
+        generation_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
+        generated_entry = tk.CTkEntry(master=generation_frame, textvariable=self.generated_password, width=220)
+        generated_entry.place(x=50, y=165)
+
+        generate_button = tk.CTkButton(master=generation_frame, width=220, text="Generate",
+                                       command=self.generate(generated_entry), corner_radius=6)
+        generate_button.place(x=50, y=270)
+
+    def generate(self, entry_box):
+        characters = string.ascii_letters + string.digits + string.punctuation
+        generated_password = ''.join(random.choice(characters) for i in range(15))
+        entry_box.delete(0, tk.END)
+        entry_box.insert(0, generated_password)
+
+    def delete_password(self):
+        self.withdraw()
+        active_window = tk.CTkToplevel(self)
+        active_window.geometry('700x520')
         pass
 
     def insert_password(self):
         self.withdraw()
         active_window = tk.CTkToplevel(self)
-        active_window = tk.CTkToplevel(self)
         active_window.geometry('700x520')
         active_window.title("Insert Password")
+        pass
+
+    def update_entry(self):
+        self.withdraw()
+        active_window = tk.CTkToplevel(self)
+        active_window.geometry('700x520')
+        active_window.title("Update Entry")
+
+
         pass
 
     def login(self):
@@ -109,11 +136,19 @@ class App(tk.CTk):
 
             generate_password_button = tk.CTkButton(master=main_window, width=220, text="Generate a password",
                                                     command=self.generate_password, corner_radius=6)
-            generate_password_button.place(x=250, y=440)
+            generate_password_button.place(x=50, y=440)
 
-            insert_password_button = tk.CTkButton(master=main_window, width=150,text="Insert a new password",
+            insert_password_button = tk.CTkButton(master=main_window, width=150,text="Insert Password",
                                                   command=self.insert_password, corner_radius=6)
-            insert_password_button.place(x=250, y=470)
+            insert_password_button.place(x=300, y=440)
+
+            delete_password_button = tk.CTkButton(master=main_window, width=120, text="Delete Password",
+                                                  command=self.delete_password, corner_radius=6)
+            delete_password_button.place(x=490, y=440)
+
+            update_password_button = tk.CTkButton(master=main_window, width=120, text="Update Entry",
+                                                  command=self.update_entry, corner_radius=6)
+            update_password_button.place(x=550, y=440)
 
         elif password != password_actual:
 
