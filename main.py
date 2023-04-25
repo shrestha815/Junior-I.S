@@ -37,9 +37,19 @@ def init_db():
         print("Failure to connect")
 
 
+def generate(entry_box):
+    entry_box.delete(0, tk.END)
+    characters = string.ascii_letters + string.digits + string.punctuation
+    generated_password = ''.join(random.choice(characters) for i in range(15))
+    print("Call")
+    return generated_password
+
+
 class App(tk.CTk):
     def __init__(self):
         super().__init__()
+        self.psswd = None
+        self.generated_entry = None
         init_db()
 
         # main_window
@@ -51,31 +61,36 @@ class App(tk.CTk):
         self.email_holder = tk.StringVar()
         self.password_reset = tk.StringVar()
         self.password_reset_verification = tk.StringVar()
-        self.generated_password = tk.StringVar()
 
         self.main_window()
         self._set_appearance_mode("System")
 
     def generate_password(self):
+        self.withdraw()
         active_window = tk.CTkToplevel(self)
         active_window.geometry('700x520')
         active_window.title("Password Generator")
+        active_window.focus_set()
+        self.psswd = tk.StringVar()
 
         generation_frame = tk.CTkFrame(master=active_window, width=320, height=360, corner_radius=15)
         generation_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-        generated_entry = tk.CTkEntry(master=generation_frame, textvariable=self.generated_password, width=220)
-        generated_entry.place(x=50, y=165)
+        self.generated_entry = tk.CTkEntry(master=generation_frame, textvariable=self.psswd, width=220)
+        self.generated_entry.place(x=50, y=165)
 
         generate_button = tk.CTkButton(master=generation_frame, width=220, text="Generate",
-                                       command=self.generate(generated_entry), corner_radius=6)
+                                       command=self.generate2, corner_radius=6)
         generate_button.place(x=50, y=270)
 
-    def generate(self, entry_box):
+    def generate2(self):
+        self.generated_entry.delete(0, tk.END)
         characters = string.ascii_letters + string.digits + string.punctuation
         generated_password = ''.join(random.choice(characters) for i in range(15))
-        entry_box.delete(0, tk.END)
-        entry_box.insert(0, generated_password)
+        print(self.psswd)
+        # return generated_password
+        self.generated_entry.insert(0, generated_password)
+        print("Checking")
 
     def delete_password(self):
         self.withdraw()
@@ -88,15 +103,6 @@ class App(tk.CTk):
         active_window = tk.CTkToplevel(self)
         active_window.geometry('700x520')
         active_window.title("Insert Password")
-        pass
-
-    def update_entry(self):
-        self.withdraw()
-        active_window = tk.CTkToplevel(self)
-        active_window.geometry('700x520')
-        active_window.title("Update Entry")
-
-
         pass
 
     def login(self):
@@ -137,18 +143,6 @@ class App(tk.CTk):
             generate_password_button = tk.CTkButton(master=main_window, width=220, text="Generate a password",
                                                     command=self.generate_password, corner_radius=6)
             generate_password_button.place(x=50, y=440)
-
-            insert_password_button = tk.CTkButton(master=main_window, width=150,text="Insert Password",
-                                                  command=self.insert_password, corner_radius=6)
-            insert_password_button.place(x=300, y=440)
-
-            delete_password_button = tk.CTkButton(master=main_window, width=120, text="Delete Password",
-                                                  command=self.delete_password, corner_radius=6)
-            delete_password_button.place(x=490, y=440)
-
-            update_password_button = tk.CTkButton(master=main_window, width=120, text="Update Entry",
-                                                  command=self.update_entry, corner_radius=6)
-            update_password_button.place(x=550, y=440)
 
         elif password != password_actual:
 
@@ -243,5 +237,3 @@ class App(tk.CTk):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-
-
