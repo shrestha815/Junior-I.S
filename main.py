@@ -1,3 +1,4 @@
+# Required Imports
 import tkinter
 from tkinter import ttk
 import customtkinter as tk
@@ -7,9 +8,8 @@ import sqlite3 as sq
 import traceback
 import sys
 
+# Function that initializes the database, creating the database and the required tables.
 
-#tasks input passwords, update and delete, #comments for explanations and navigation from one window to the next via a log out function
-# after reset of a password user should be brought back to the main window 
 
 def init_db():
     try:
@@ -28,7 +28,6 @@ def init_db():
                                 master_password text
             );"""
         cursor.execute(master_password_table)
-        #table_insertion_query = "INSERT INTO user_passwords VALUES('shrestha815','password','sshrestha24@wooster.edu')"
         cursor.execute(table_creation_query)
         database_connection.commit()
         database_connection.close()
@@ -48,10 +47,14 @@ def generate(entry_box):
 class App(tk.CTk):
     def __init__(self):
         super().__init__()
-        self.psswd = None
+        # variables used for insertion into the database
+        self.email_entry = tk.StringVar()
+        self.username = tk.StringVar()
+        self.account = tk.StringVar()
+        self.password = tk.StringVar()
         self.generated_entry = None
+        # Database Initialization
         init_db()
-
         # main_window
         self.title("Password Manager")
         self.geometry("600x440")
@@ -68,42 +71,65 @@ class App(tk.CTk):
     def generate_password(self):
         self.withdraw()
         active_window = tk.CTkToplevel(self)
-        active_window.geometry('700x520')
-        active_window.title("Password Generator")
+        active_window.geometry('800x620')
+        active_window.title("Password Entry")
         active_window.focus_set()
-        self.psswd = tk.StringVar()
+        self.password = tk.StringVar()
 
-        generation_frame = tk.CTkFrame(master=active_window, width=320, height=360, corner_radius=15)
-        generation_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+        active_frame = tk.CTkFrame(master=active_window, width=700, height=520, corner_radius=15)
+        active_frame.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-        self.generated_entry = tk.CTkEntry(master=generation_frame, textvariable=self.psswd, width=220)
-        self.generated_entry.place(x=50, y=165)
+        self.generated_entry = tk.CTkEntry(master=active_frame, textvariable=self.password, width=220)
+        self.generated_entry.place(x=50, y=365)
 
-        generate_button = tk.CTkButton(master=generation_frame, width=220, text="Generate",
+        generate_button = tk.CTkButton(master=active_frame, width=220, text="Generate",
                                        command=self.generate2, corner_radius=6)
-        generate_button.place(x=50, y=270)
+        generate_button.place(x=50, y=430)
+
+        account_label = tk.CTkLabel(master=active_frame, text="Account Name", font=('Open Sans', 15), anchor="center")
+        account_label.place(x=50, y=200)
+
+        account_entry = tk.CTkEntry(master=active_frame, textvariable=self.account, width=220)
+        account_entry.place(x=50, y=240)
+
+        username_label = tk.CTkLabel(master=active_frame, text="Username", font=('Open Sans', 15))
+        username_label.place(x=300, y=200)
+
+        username_entry = tk.CTkEntry(master=active_frame, textvariable=self.username, width=220)
+        username_entry.place(x=300, y=240)
+
+        email_label = tk.CTkLabel(master=active_frame, text="Email", font=('Open Sans', 15))
+        email_label.place(x=300, y=340)
+
+        email_entry = tk.CTkEntry(master=active_frame, textvariable=self.email_entry, width=220)
+        email_entry.place(x=300, y=365)
+
+        submit_button = tk.CTkButton(master=active_frame, width=220, text="Submit",
+                                     command=self.submit_entry, corner_radius=6)
+        submit_button.place(x=300, y=430)
+
+    def submit_entry(self):
+        database_connection = sq.connect('password_database.db')
+        cursor = database_connection.cursor()
+        print("connection successful")
+
+        user_name = self.username.get()
+        email = self.email_entry.get()
+        password = self.password.get()
+        account = self.account.get()
+        table_insertion_query = "INSERT INTO user_passwords VALUES(?,?,?,?)"
+        cursor.execute(table_insertion_query, (account, user_name, password, email))
+        database_connection.commit()
+        database_connection.close()
 
     def generate2(self):
         self.generated_entry.delete(0, tk.END)
         characters = string.ascii_letters + string.digits + string.punctuation
         generated_password = ''.join(random.choice(characters) for i in range(15))
-        print(self.psswd)
+        print(self.password)
         # return generated_password
         self.generated_entry.insert(0, generated_password)
         print("Checking")
-
-    def delete_password(self):
-        self.withdraw()
-        active_window = tk.CTkToplevel(self)
-        active_window.geometry('700x520')
-        pass
-
-    def insert_password(self):
-        self.withdraw()
-        active_window = tk.CTkToplevel(self)
-        active_window.geometry('700x520')
-        active_window.title("Insert Password")
-        pass
 
     def login(self):
         database_connection = sq.connect('password_database.db')
@@ -129,7 +155,7 @@ class App(tk.CTk):
             storage = cursor.fetchall()
             columns = ('account', 'username', 'password', 'email')
 
-            table = ttk.Treeview(main_window,columns=columns, selectmode='browse', show= "headings")
+            table = ttk.Treeview(main_window,columns=columns, selectmode='browse', show="headings")
             table.heading('account', text='Account')
             table.heading('username', text='Username')
             table.heading('password', text='Password')
@@ -140,9 +166,9 @@ class App(tk.CTk):
 
             table.place(relx=0.5, rely=0.5, width=1000, height=410, anchor=tkinter.CENTER)
 
-            generate_password_button = tk.CTkButton(master=main_window, width=220, text="Generate a password",
-                                                    command=self.generate_password, corner_radius=6)
-            generate_password_button.place(x=50, y=440)
+            insert_password_button = tk.CTkButton(master=main_window, width=220, text="Insert a password",
+                                                  command=self.generate_password, corner_radius=6)
+            insert_password_button.place(x=50, y=440)
 
         elif password != password_actual:
 
@@ -195,7 +221,7 @@ class App(tk.CTk):
             database_connection = sq.connect('password_database.db')
             cursor = database_connection.cursor()
             new_password = self.password_reset.get()
-            # need to fix this
+
             update_query = """UPDATE master_password 
                             SET master_password = ?
                             WHERE email = ?;"""
