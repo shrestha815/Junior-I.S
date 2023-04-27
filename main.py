@@ -5,10 +5,14 @@ import customtkinter as tk
 import random
 import string
 import sqlite3 as sq
-import traceback
-import sys
 
 # Function that initializes the database, creating the database and the required tables.
+#
+# Parameters:
+#   None
+#
+# Return Value:
+# None
 
 
 def init_db():
@@ -35,13 +39,14 @@ def init_db():
     except sq.Error as error:
         print("Failure to connect")
 
-
-def generate(entry_box):
-    entry_box.delete(0, tk.END)
-    characters = string.ascii_letters + string.digits + string.punctuation
-    generated_password = ''.join(random.choice(characters) for i in range(15))
-    print("Call")
-    return generated_password
+# Class that defines the application, all the functions associated with it
+# and all the variables used across the functions
+#
+# Parameters:
+#  tk.CTk - customtkinter instance
+#
+# Return value:
+#   None
 
 
 class App(tk.CTk):
@@ -68,6 +73,11 @@ class App(tk.CTk):
         self.main_window()
         self._set_appearance_mode("System")
 
+    # Function that is called when the insert button is clicked by the user,
+    # creates a new window for the purpose of inserting new entries into the database
+    # Parameters:
+    #   self - The current instance of the app.
+    #   Return value - None
     def generate_password(self):
         self.withdraw()
         active_window = tk.CTkToplevel(self)
@@ -108,6 +118,13 @@ class App(tk.CTk):
                                      command=self.submit_entry, corner_radius=6)
         submit_button.place(x=300, y=430)
 
+    # Function that executes the sql command to insert the data from the entries into the database.
+    #
+    # Parameters:
+    #   self - The current instance of the application
+    #
+    # Return value:
+    #   None
     def submit_entry(self):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
@@ -122,6 +139,13 @@ class App(tk.CTk):
         database_connection.commit()
         database_connection.close()
 
+    # Function that generates a password and inserts the generated password into the entry box associated with it\
+    #
+    # Parameters:
+    #   self - The current instance of the application
+    #
+    # Return Value:
+    #   None
     def generate2(self):
         self.generated_entry.delete(0, tk.END)
         characters = string.ascii_letters + string.digits + string.punctuation
@@ -131,6 +155,14 @@ class App(tk.CTk):
         self.generated_entry.insert(0, generated_password)
         print("Checking")
 
+    # Function that connects to the database and verifies whether the
+    # entered master password is correct to the one stored in the password
+    #
+    # Parameters:
+    #   self - Current instance of the app.
+    #
+    # Return value:
+    #   None
     def login(self):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
@@ -177,6 +209,14 @@ class App(tk.CTk):
                                                 text_color="red", font=('Open Sans', 10), anchor="center")
             error_message_label.place(x=150, y=330)
 
+    # Function that draws a new window when the user wishes to recover their password,
+    # triggered when user clicks on the "forgot password" text in the first window of the application
+    #
+    # Parameters:
+    #   self - The current instance of the program
+    #
+    # Return value:
+    #   None
     def password_recovery_window(self):
         self.withdraw()
         window = tk.CTkToplevel(self)
@@ -206,6 +246,14 @@ class App(tk.CTk):
                                      command=self.recover_query, corner_radius=6)
         submit_button.place(x=50, y=270)
 
+    # Function that checks whether the recovery email that is entered matches the recovery email in the database
+    # and updates the master password if it does
+    #
+    # Parameters:
+    #   self - The current instance of the application
+    #
+    # Return value:
+    #   None
     def recover_query(self):
         database_connection = sq.connect('password_database.db')
         cursor = database_connection.cursor()
@@ -235,6 +283,13 @@ class App(tk.CTk):
             print("You failed")
             cursor.close()
 
+    # The main window of the application, the first window that the user views when the application starts
+    #
+    # Parameters:
+    #   self - The current instance of the application
+    #
+    # Return value:
+    #   None
     def main_window(self):
 
         frame = tk.CTkFrame(master=self, width=320, height=360, corner_radius=15)
@@ -242,9 +297,6 @@ class App(tk.CTk):
 
         login_label = tk.CTkLabel(master=frame, text="Enter Master Password", font=('Open Sans', 19), anchor="center")
         login_label.place(x=55, y=45)
-
-        # username_entry = tk.CTkEntry(master=frame, width=220, placeholder_text='Username')
-        # username_entry.place(x=50, y=130)
 
         password_entry_label = tk.CTkLabel(master=frame, text="Password", font=('Open Sans', 14), anchor="center")
         password_entry_label.place(x=50,y=130)
